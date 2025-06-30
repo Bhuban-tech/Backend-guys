@@ -1,4 +1,4 @@
-package com.example.back_end.Dto;
+package com.example.back_end.Config;
 
 public class LoginRequest {
     public String email;
