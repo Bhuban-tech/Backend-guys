@@ -1,7 +1,6 @@
 package com.example.back_end.Controller;
 
 import com.example.back_end.Entity.ServiceCatalogEntity;
-import com.example.back_end.Repository.ServiceCatalogRepository;
 import com.example.back_end.Service.ServiceCatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,60 +16,28 @@ import java.util.List;
 public class ServiceCatalogController {
 
     @Autowired
-    private ServiceCatalogRepository serviceCatalogRepository;
-
-    @Autowired
-    ServiceCatalogService serviceService;
+    private ServiceCatalogService serviceService;
 
     @GetMapping
-    public List<ServiceCatalogEntity> getAll(){
+    public List<ServiceCatalogEntity> getAll() {
         return serviceService.getAllServices();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceCatalogEntity> getById(@PathVariable Long id){
+    public ResponseEntity<ServiceCatalogEntity> getById(@PathVariable Long id) {
         return serviceService.getServiceById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    @PostMapping
-    public ServiceCatalogEntity create(@RequestBody ServiceCatalogEntity newService) {
-        return serviceService.createService(newService);
-    }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ServiceCatalogEntity> update(@PathVariable Long id, @RequestBody ServiceCatalogEntity updatedService) {
-        return serviceService.updateService(id, updatedService)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (serviceService.deleteService(id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ServiceCatalogEntity> uploadService(
-            @RequestPart("service_name") String name,
-            @RequestPart("service_description") String desc,
-            @RequestPart("image") MultipartFile file) throws IOException {
-
-        ServiceCatalogEntity service = serviceService.createServiceWithImage(name, desc, file);
-        return ResponseEntity.ok(service);
-    }
-
-    @GetMapping("/{id}/image")
+    @GetMapping("/image/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
         return serviceService.getServiceById(id)
                 .map(service -> {
                     MediaType mediaType;
-                    try{
+                    try {
                         mediaType = MediaType.parseMediaType(service.getImageType());
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         mediaType = MediaType.APPLICATION_OCTET_STREAM;
                     }
                     return ResponseEntity.ok()
@@ -78,5 +45,42 @@ public class ServiceCatalogController {
                             .body(service.getImageData());
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/create/{userId}")
+    public String create(@PathVariable Long userId, @RequestBody ServiceCatalogEntity newService) {
+        return serviceService.createService(userId, newService);
+    }
+
+    @PostMapping(value = "/upload/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String uploadService(
+            @PathVariable Long userId,
+            @RequestPart("service_name") String name,
+            @RequestPart("service_description") String description,
+            @RequestPart("image") MultipartFile file) throws IOException {
+        return serviceService.createServiceWithImage(userId, name, description, file);
+    }
+
+    @PutMapping("/{userId}/{id}")
+    public String update(@PathVariable Long userId, @PathVariable Long id, @RequestBody ServiceCatalogEntity updatedService) {
+        try {
+            return serviceService.updateService(userId, id, updatedService)
+                    .map(service -> "Service updated successfully")
+                    .orElse("Service not found");
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+    }
+
+    @DeleteMapping("/{userId}/{id}")
+    public String delete(@PathVariable Long userId, @PathVariable Long id) {
+        try {
+            if (serviceService.deleteService(userId, id)) {
+                return "Service deleted successfully";
+            }
+            return "Service not found";
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
     }
 }

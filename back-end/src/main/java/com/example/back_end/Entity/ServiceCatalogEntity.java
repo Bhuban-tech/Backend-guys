@@ -1,60 +1,50 @@
 package com.example.back_end.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "service_catalog_entity")
 public class ServiceCatalogEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "service_name")
     private String serviceName;
+
+    @Column(name = "service_description")
     private String serviceDescription;
 
     @Lob
-    @Column(name="image_data")
+    @Column(name = "image_data")
     private byte[] imageData;
 
-    @Column(name="image_type")
+    @Column(name = "image_type")
     private String imageType;
 
-    public Long getId() {
-        return id;
-    }
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
 
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    public void setServiceName(String serviceName) {
+    public ServiceCatalogEntity(String serviceName, String serviceDescription, byte[] imageData, String imageType, User user) {
         this.serviceName = serviceName;
-    }
-
-    public String getServiceDescription() {
-        return serviceDescription;
-    }
-
-    public void setServiceDescription(String serviceDescription) {
         this.serviceDescription = serviceDescription;
-    }
-
-    public byte[] getImageData() {
-        return imageData;
-    }
-
-    public void setImageData(byte[] imageData) {
         this.imageData = imageData;
-    }
-
-    public String getImageType() {
-        return imageType;
-    }
-
-    public void setImageType(String imageType) {
         this.imageType = imageType;
+        this.user = user;
+        this.creationDate = LocalDateTime.now();
     }
 }

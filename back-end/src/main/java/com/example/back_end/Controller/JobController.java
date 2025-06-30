@@ -1,11 +1,12 @@
-package com.example.Backend.Controller;
+package com.example.back_end.Controller;
 
-import com.example.Backend.Entity.Application;
-import com.example.Backend.Entity.Job;
-import com.example.Backend.Entity.User;
-import com.example.Backend.Repository.ApplicationRepository;
-import com.example.Backend.Repository.JobRepository;
-import com.example.Backend.Repository.UserRepository;
+
+import com.example.back_end.Entity.Application;
+import com.example.back_end.Entity.Job;
+import com.example.back_end.Entity.User;
+import com.example.back_end.Repository.ApplicationRepository;
+import com.example.back_end.Repository.JobRepository;
+import com.example.back_end.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
