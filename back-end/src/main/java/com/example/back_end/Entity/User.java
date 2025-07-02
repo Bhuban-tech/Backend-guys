@@ -1,25 +1,26 @@
 package com.example.back_end.Entity;
 
+
+
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "users")
+@Table(name = "users") // optional: defines the table name
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String email;
-
-    @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false)
-    private String role; // ADMIN or DEVELOPER
-
-    @Column(length = 6)
     private String otp;
+
+    private LocalDateTime otpExpiry;
+
+    // Getters and setters...
 
     public Long getId() {
         return id;
@@ -45,19 +46,19 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public String getOtp() {
         return otp;
     }
 
     public void setOtp(String otp) {
         this.otp = otp;
+    }
+
+    public LocalDateTime getOtpExpiry() {
+        return otpExpiry;
+    }
+
+    public void setOtpExpiry(LocalDateTime otpExpiry) {
+        this.otpExpiry = otpExpiry;
     }
 }

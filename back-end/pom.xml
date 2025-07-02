@@ -39,6 +39,12 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!-- Java Mail Sender for OTP emails -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
 		<!-- Database -->
 		<dependency>
 			<groupId>com.mysql</groupId>
@@ -110,4 +116,5 @@
 			</plugin>
 		</plugins>
 	</build>
+
 </project>

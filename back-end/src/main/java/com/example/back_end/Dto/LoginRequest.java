@@ -1,6 +1,0 @@
-package com.example.back_end.Dto;
-
-public class LoginRequest {
-    public String email;
-    public String password;
-}
